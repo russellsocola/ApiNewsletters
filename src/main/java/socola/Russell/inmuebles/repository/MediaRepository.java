@@ -14,7 +14,7 @@ import java.util.List;
 public class MediaRepository implements ServiceInterface<Media> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
 
     @Override
@@ -39,6 +39,8 @@ public class MediaRepository implements ServiceInterface<Media> {
 
     @Override
     public List<Media> getAll() {
-        return null;
+
+        String hql = "FROM Media";
+        return entityManager.createQuery(hql).getResultList();
     }
 }

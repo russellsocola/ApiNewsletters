@@ -1,6 +1,7 @@
 package socola.Russell.inmuebles.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
@@ -13,23 +14,38 @@ import java.util.List;
 @Transactional
 public class PropiedadRepository implements ServiceInterface<Propiedad> {
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public void agregar(Propiedad propiedad) {
-        String sqlQuery= "INSERT INTO inmuhebles.propiedad (bano, descripcion, direccion, disponible, estado, fecha_creacion, fecha_eliminacio, habitacion, latitud, longitud, m2, nombre, precio, titulo, zipcode, id_galeria, id_vendedor, ano) \n" +
-                "VALUES ('2', 'Apartamento espacioso en el centro de la ciudad', 'Calle Principal 123', 1, 'Activo', '2024-02-05 12:00:00', '2024-02-05 12:00:00', '3', '40.7128', '-74.0060', '100', 'Apartamento Ejemplo', '200000', 'Apartamento en el Centro', '12345', 1, 1, '2000')\n";
-        entityManager.createNativeQuery(sqlQuery).setParameter(1, propiedad).executeUpdate();
-
-
-        /*String sqlconsult = "INSERT INTO Lead (email) VALUES (?)";
-        baseDeDatos.createNativeQuery(sqlconsult).setParameter(1, emailDeUsuario).executeUpdate();*/
+        entityManager.persist(propiedad);
     }
 
     public void modificar(Propiedad propiedad, Long id) {
+        Propiedad editarPropiedad = entityManager.find(Propiedad.class, id);
+        if (editarPropiedad != null){
+            editarPropiedad.setPrecio(propiedad.getPrecio());
+            editarPropiedad.setTitulo(propiedad.getTitulo());
+            editarPropiedad.setDescripcion(propiedad.getDescripcion());
+            editarPropiedad.setM2(propiedad.getM2());
+            editarPropiedad.setBano(propiedad.getBano());
+            editarPropiedad.setAno(propiedad.getAno());
+            editarPropiedad.setHabitacion(propiedad.getHabitacion());
+            editarPropiedad.setZipcode(propiedad.getZipcode());
+            editarPropiedad.setDireccion(propiedad.getDireccion());
+            editarPropiedad.setLatitud(propiedad.getLatitud());
+            editarPropiedad.setLongitud(propiedad.getLongitud());
+            editarPropiedad.setEstado(propiedad.getEstado());
+            editarPropiedad.setEstado(String.valueOf(propiedad.getDisponible()));
+
+            entityManager.merge(editarPropiedad);
+        }else {
+            throw new EntityNotFoundException("No se encuentra la Galeria con ID :" + id);
+        }
 
     }
     public void eliminar(Long id) {
-
+        String hql = "DELETE FROM galeria WHERE id = :id";
+        entityManager.createQuery(hql).setParameter("id",id).executeUpdate();
     }
 
     @Transactional
@@ -39,6 +55,8 @@ public class PropiedadRepository implements ServiceInterface<Propiedad> {
 
     @Transactional
     public List<Propiedad> getAll() {
-        return null;
+
+        String hql = "FROM Propiedad";
+        return entityManager.createQuery(hql).getResultList();
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public class VendedorRepository implements ServiceInterface<Vendedor> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public void agregar(Vendedor objeto) {
@@ -39,6 +39,8 @@ public class VendedorRepository implements ServiceInterface<Vendedor> {
 
     @Override
     public List<Vendedor> getAll() {
-        return null;
+
+        String hql = "FROM Vendedor";
+        return entityManager.createQuery(hql).getResultList();
     }
 }
