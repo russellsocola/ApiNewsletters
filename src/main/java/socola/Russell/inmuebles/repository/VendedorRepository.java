@@ -1,46 +1,49 @@
 package socola.Russell.inmuebles.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import socola.Russell.inmuebles.models.Vendedor;
-import socola.Russell.inmuebles.services.ServiceInterface;
-import socola.Russell.inmuebles.services.VendedorService;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class VendedorRepository implements ServiceInterface<Vendedor> {
+public class VendedorRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public void agregar(Vendedor objeto) {
-
+    @Transactional
+    public void agregar(Vendedor vendedor) {
+        entityManager.persist(vendedor);
     }
 
-    @Override
-    public void modificar(Vendedor objeto, Long id) {
-
+    @Transactional
+    public void modificar(Vendedor vendedor) {
+        entityManager.merge(vendedor);
     }
 
-    @Override
+    @Transactional
     public void eliminar(Long id) {
-
+        Vendedor vendedor = entityManager.find(Vendedor.class,id);
+        if (vendedor != null){
+            entityManager.remove(vendedor);
+        }else {
+            throw new EntityNotFoundException("No se encuentra el Vendedor con el ID: "+ id);
+        }
     }
 
-    @Override
+    @Transactional
     public Vendedor get(Long id) {
-        return null;
+        return entityManager.find(Vendedor.class,id);
     }
 
-    @Override
+    @Transactional
     public List<Vendedor> getAll() {
-
         String hql = "FROM Vendedor";
-        return entityManager.createQuery(hql).getResultList();
+        return entityManager.createQuery(hql, Vendedor.class).getResultList();
     }
 }

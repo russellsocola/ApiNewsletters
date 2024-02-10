@@ -22,7 +22,7 @@ public class GaleriaController implements InterfaceCrontroller<Galeria>{
     @PutMapping("/api/galeria/{id}")
     public void modificar(@RequestBody Galeria galeria, @PathVariable("id") Long id){
         //funcionalidad para modificar en la base de datos
-        galeriaService.modificar(galeria,id);
+        galeriaService.modificar(galeria, id);
     }
 
     @DeleteMapping("/api/galeria/{id}")

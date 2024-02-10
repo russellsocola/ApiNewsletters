@@ -22,7 +22,7 @@ public class Media {
     @Column(name = "url_local")
     private String urllocal;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_galeria")
     private Galeria galeria;
 }
