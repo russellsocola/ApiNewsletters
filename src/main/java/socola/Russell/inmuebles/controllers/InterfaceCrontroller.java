@@ -1,17 +1,19 @@
 package socola.Russell.inmuebles.controllers;
 
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface InterfaceCrontroller<R>{
 
-    void agregar( R objeto);
+    ResponseEntity<String> agregar(R objeto);
 
 
-    void modificar(R objeto, Long id);
+   ResponseEntity<String> modificar(R objeto, Long id);
 
 
-    void eliminar(Long id);
+    ResponseEntity<String> eliminar(Long id);
 
     R get(Long id);
 
